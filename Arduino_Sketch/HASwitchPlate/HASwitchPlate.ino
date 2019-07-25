@@ -41,6 +41,8 @@ char groupName[16] = "plates";
 char configUser[32] = "admin";
 char configPassword[32] = "";
 char motionPinConfig[3] = "0";
+char onValue[5] = "1";
+char offValue[5] = "0";
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <FS.h>
@@ -670,8 +672,8 @@ void nextionProcessInput()
     {
       debugPrintln(String(F("HMI IN: [Button ON] 'p[")) + nextionPage + "].b[" + nextionButtonID + "]'");
       String mqttButtonTopic = mqttStateTopic + "/p[" + nextionPage + "].b[" + nextionButtonID + "]";
-      debugPrintln(String(F("MQTT OUT: '")) + mqttButtonTopic + "' : 'ON'");
-      mqttClient.publish(mqttButtonTopic, "ON");
+      debugPrintln(String(F("MQTT OUT: '")) + mqttButtonTopic + "' : '" + onValue + "'");
+      mqttClient.publish(mqttButtonTopic, onValue);
       String mqttButtonJSONEvent = String(F("{\"event\":\"p[")) + String(nextionPage) + String(F("].b[")) + String(nextionButtonID) + String(F("]\", \"value\":\"ON\"}"));
       mqttClient.publish(mqttStateJSONTopic, mqttButtonJSONEvent);
     }
@@ -679,8 +681,8 @@ void nextionProcessInput()
     {
       debugPrintln(String(F("HMI IN: [Button OFF] 'p[")) + nextionPage + "].b[" + nextionButtonID + "]'");
       String mqttButtonTopic = mqttStateTopic + "/p[" + nextionPage + "].b[" + nextionButtonID + "]";
-      debugPrintln(String(F("MQTT OUT: '")) + mqttButtonTopic + "' : 'OFF'");
-      mqttClient.publish(mqttButtonTopic, "OFF");
+      debugPrintln(String(F("MQTT OUT: '")) + mqttButtonTopic + "' : '" + offValue + "'");
+      mqttClient.publish(mqttButtonTopic, offValue);
       // Now see if this object has a .val that might have been updated.  Works for sliders,
       // two-state buttons, etc, throws a 0x1A error for normal buttons which we'll catch and ignore
       mqttGetSubtopic = "/p[" + nextionPage + "].b[" + nextionButtonID + "].val";
